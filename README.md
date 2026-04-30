@@ -1,15 +1,22 @@
 # Zenith-Indexer 🚀
 
-A dual-core search engine designed for speed and intelligence.
+**Zenith-Indexer** is a high-performance local knowledge retrieval system. It combines the raw power of **Rust** for data processing with the intelligence of **Python-based LLMs**.
 
-## 🏗 Architecture
-- **Core Engine (Rust):** Handles high-speed file scanning and word frequency indexing.
-- **AI Interface (Python):** Connects the index to LLMs (OpenAI/Anthropic) for semantic queries.
+## 🏗 Project Structure
 
-## 🛠 Features
-- [ ] Lightning-fast indexing of local `.txt` and `.md` files.
-- [ ] Memory-safe execution via Rust.
-- [ ] Context-aware AI responses based on local data.
+- **`/core-engine`**: High-speed indexing engine written in Rust.
+- **`/ai-interface`**: Python wrapper to connect indexed data with OpenAI/Anthropic APIs.
+- **`/tests`**: Suite of automated tests to ensure system reliability.
+
+## 🛠 Tech Stack
+- **Languages:** Python 3.10+, Rust (Edition 2021)
+- **AI:** Integration with OpenAI API for RAG (Retrieval-Augmented Generation).
+- **Performance:** Multithreaded file scanning (planned in Rust).
 
 ## 🚦 Getting Started
-(En cours de développement - J'apprends Rust pour optimiser la partie Core !)
+1. Clone the repo: `git clone https://github.com/ton-pseudo/zenith-indexer.git`
+2. Create a `.env` file based on `.env.example`.
+3. (Development in progress...)
+
+---
+*Created by Maxence, an aspiring software engineer passionate about AI & Systems.*
