@@ -52,7 +52,7 @@ zenith-indexer/
 
 **1.** Clone the repository
 ```bash
-git clone https://github.com/ton-pseudo/zenith-indexer.git
+git clone https://github.com/maxenceprohub/zenith-indexer.git
 ```
 
 **2.** Set up your environment
