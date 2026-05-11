@@ -52,7 +52,7 @@ if __name__ == "__main__":
         for index, path in enumerate(files):
             print(f"[{index}] {path.name}")
         
-        # 3. User selec
+        # 3. User selection
         try:
             selection = int(input("\nSelect a file index to analyze: "))
             
