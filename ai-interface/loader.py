@@ -79,4 +79,4 @@ if __name__ == "__main__":
         except ValueError:
             print("Input Error: Please enter a numeric value.")
 
-    print("\n--- SESSION TERMINATED ---")
+    print("\n-- SESSION TERMINATED --")
