@@ -38,7 +38,7 @@ def get_keyword_frequency(text_content, keyword):
     return content_normalized.count(keyword_normalized)
 
 if __name__ == "__main__":
-    print("--- ZENITH LOADER | DOCUMENT ANALYSER ---")
+    print("--- ZENITH | DOCUMENT ANALYSER ---")
     
     # 1. Directory selection
     target_dir = input("Enter directory name to scan (e.g., 'data'): ")
@@ -79,4 +79,4 @@ if __name__ == "__main__":
         except ValueError:
             print("Input Error: Please enter a numeric value.")
 
-    print("\n-- SESSION TERMINATED --")
+    print("\n-- SESSION ENDED --")
