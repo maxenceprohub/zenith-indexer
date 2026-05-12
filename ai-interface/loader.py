@@ -38,7 +38,7 @@ def get_keyword_frequency(text_content, keyword):
     return content_normalized.count(keyword_normalized)
 
 if __name__ == "__main__":
-    print("--- ZENITH | DOCUMENT ANALYSER ---")
+    print("--- ZENITH INDEXER | DOCUMENT ANALYSER ---")
     
     # 1. Directory selection
     target_dir = input("Enter directory name to scan (e.g., 'data'): ")
