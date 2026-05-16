@@ -1,82 +1,106 @@
 import os
 from pathlib import Path
 
-def scan_documents(directory_name):
+def scanner_documents():
     """
-    Locates all .txt files within the specified directory.
-    Calculates path relative to the script's grandparent directory.
+    Localise tous les fichiers .txt dans le dossier spécifié.
+    Calcule le chemin par rapport au dossier parent du script.
     """
-    # Define the base path (moving up two levels from this script)
-    base_path = Path(__file__).parent.parent / directory_name
+    chemin_base = Path(__file__).parent / "documents"
     
-    # Safety check: create the directory if it does not exist
-    if not base_path.exists():
-        base_path.mkdir(parents=True, exist_ok=True)
+    if not chemin_base.exists():
+        chemin_base.mkdir(parents=True, exist_ok=True)
         return []
     
-    # Return a list of all text files found
-    return list(base_path.glob('*.txt'))
+    return list(chemin_base.glob('*.txt'))
 
-def read_file_content(file_path):
-    """Reads and returns the string content of a given file path."""
+def lire_contenu_fichier(chemin_fichier):
+    """Lit et renvoie le contenu textuel d'un fichier donné."""
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(chemin_fichier, 'r', encoding='utf-8') as f:
             return f.read()
     except Exception as e: 
-        return f"Error reading file: {e}"    
+        return f"Erreur lors de la lecture du fichier : {e}"    
 
-def get_keyword_frequency(text_content, keyword):
-    """
-    Calculates the number of occurrences of a keyword within the text.
-    Performs a case-insensitive search.
-    """
-    # Normalize both content and keyword to lowercase for consistency
-    content_normalized = text_content.lower()
-    keyword_normalized = keyword.lower()
-    
-    # Count exact matches
-    return content_normalized.count(keyword_normalized)
+def obtenir_frequence_mot_cle(contenu_texte, mot_cle):
+    """Calcule le nombre d'occurrences d'un mot-clé dans le texte."""
+    contenu_normalise = contenu_texte.lower()
+    mot_cle_normalise = mot_cle.lower()    
+    return contenu_normalise.count(mot_cle_normalise)
 
+def calculer_metriques(contenu_texte, nombre_occurences):
+    """Calcule le total de mots et la densité."""
+    mots = contenu_texte.split()
+    total_mots = len(mots)
+    densite = (nombre_occurences / total_mots) * 100 if total_mots > 0 else 0
+    return total_mots, round(densite, 2)
+
+def sauvegarder_rapport(nom_fichier_analyse, mot_cle, occurences, total_mots, densite):
+    """Génère un fichier texte contenant les résultats de l'analyse."""
+    nom_rapport = f"rapport_{nom_fichier_analyse}"
+    chemin_rapport = Path(__file__).parent / nom_rapport
+
+    try:
+        with open(chemin_rapport, "w", encoding='utf-8') as f:
+            f.write("==================================================\n")
+            f.write("         ZENITH INDEXER - RAPPORT D'ANALYSE       \n")
+            f.write("==================================================\n\n")
+            f.write(f"Fichier analyse : {nom_fichier_analyse}\n")
+            f.write(f"Mot-cle recherche : '{mot_cle}'\n\n")
+            f.write(f"--- METRIQUES ---\n")
+            f.write(f"Nombre total de mots : {total_mots}\n")
+            f.write(f"Nombre d'occurrences : {occurrences}\n")
+            f.write(f"Densite du mot-cle   : {densite}%\n\n")
+            f.write("==================================================\n")
+            f.write("Genere automatiquement par Zenith Indexer (Prototype Python)\n")
+        print(f"Rapport généré : '{nom_rapport}'")
+        print(f"\n[INFO] Rapport sauvegarde avec succes sous : {chemin_rapport.resolve()}")
+
+    except Exception as e:
+        print(f"\n[ERREUR] Impossible de sauvegarder le rapport : {e}")
 if __name__ == "__main__":
-    print("--- ZENITH INDEXER | DOCUMENT ANALYSER ---")
     
-    # 1. Directory selection
-    target_dir = input("Enter directory name to scan (e.g., 'data'): ")
-    files = scan_documents(target_dir)
+    fichiers = scanner_documents()
 
-    if not files:
-        print(f"Error: No files found in '{target_dir}'.")
+    print("--- ZENITH INDEXER | ANALYSEUR DE DOCUMENTS ---")
+
+    if not fichiers:
+        chemin_attendu = Path(__file__).parent.parent / "documents"
+        print(f"Erreur : Aucun fichier trouvé dans 'documents'.")
+        print(f"dépose tes fichiers .txt directement dans : '{chemin_attendu}'")
     else:
-        # 2. Display file list
-        print(f"\nFound {len(files)} file(s):")
-        for index, path in enumerate(files):
-            print(f"[{index}] {path.name}")
+        print(f"\nTrouvé {len(fichiers)} fichier(s) :")
+        for index, chemin in enumerate(fichiers):
+            print(f"[{index}] {chemin.name}")
         
-        # 3. User selection
         try:
-            selection = int(input("\nSelect a file index to analyze: "))
+            selection = int(input("\nSélectionnez l'index d'un fichier à analyser : "))
             
-            if 0 <= selection < len(files):
-                selected_file = files[selection]
-                content = read_file_content(selected_file)
+            if 0 <= selection < len(fichiers):
+                fichier_selectionne = fichiers[selection]
+                contenu = lire_contenu_fichier(fichier_selectionne)
                 
-                # 4. Keyword analysis
-                search_query = input(f"Enter keyword to search in '{selected_file.name}': ")
-                occurrences = get_keyword_frequency(content, search_query)
+                requete_recherche = input(f"Entrez le mot-clé à chercher dans '{fichier_selectionne.name}' : ")
+                occurrences = obtenir_frequence_mot_cle(contenu, requete_recherche)
                 
-                if occurrences > 0:
-                    print(f"\nMatch found: The word '{search_query}' appears {occurrences} time(s).")
-                else:
-                    print(f"\nNo matches: The word '{search_query}' was not found in this document.")
-                
-                # 5. Optional display
-                toggle_view = input("\nView full document content? (y/n): ")
-                if toggle_view.lower() == 'y':
-                    print(f"\n--- DOCUMENT CONTENT ---\n{content}")
-                    
-            else:
-                print("Error: Invalid selection. Please choose a number from the list.")
-        except ValueError:
-            print("Input Error: Please enter a numeric value.")
+                # On calcule les métriques ici
+                total, pourcent = calculer_metriques(contenu, occurrences)
 
-    print("\n-- SESSION ENDED --")
+                if occurrences > 0:
+                    print(f"\n--- RÉSULTATS DE L'ANALYSE ---")
+                    print(f"Nombre total de mots dans le document : {total}")
+                    print(f"Le mot '{requete_recherche}' apparaît {occurrences} fois.")
+                    print(f"Densité du mot-clé : {pourcent}%")
+                else:
+                    print(f"\nAucune correspondance : Le mot '{requete_recherche}' n'a pas été trouvé.")
+                    print(f"Note : Le document contient tout de même {total} mots.")
+
+                sauvegarder_rapport(fichier_selectionne.name, requete_recherche, total, occurrences, pourcent)
+
+            else:
+                print("Erreur : Index invalide.")
+
+        except ValueError:
+            print("Erreur : Veuillez entrer un nombre valide.")
+
+    print("\n--- SESSION TERMINÉE ---")
