@@ -1,61 +1,45 @@
 <div align="center">
 
-# ███████╗███████╗███╗   ██╗██╗████████╗██╗  ██╗
-# ╚══███╔╝██╔════╝████╗  ██║██║╚══██╔══╝██║  ██║
-#   ███╔╝ █████╗  ██╔██╗ ██║██║   ██║   ███████║
-#  ███╔╝  ██╔══╝  ██║╚██╗██║██║   ██║   ██╔══██║
-# ███████╗███████╗██║ ╚████║██║   ██║   ██║  ██║
-# ╚══════╝╚══════╝╚═╝  ╚═══╝╚═╝   ╚═╝   ╚═╝  ╚═╝
-
-## 🚀 ZENITH INDEXER
+# ZENITH INDEXER
 
 ### High-Performance Local Knowledge Retrieval System
 
 <p align="center">
-  <img src="https://img.shields.io/badge/C++-17%20%2F%2020-blue?style=for-the-badge&logo=c%2B%2B" />
-  <img src="https://img.shields.io/badge/Python-3.10+-yellow?style=for-the-badge&logo=python" />
-  <img src="https://img.shields.io/badge/Status-In%20Development-orange?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/AI-RAG%20Ready-purple?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/C++-17%20%2F%2020-blue?style=flat-square&logo=c%2B%2B" />
+  <img src="https://img.shields.io/badge/Python-3.10+-yellow?style=flat-square&logo=python" />
+  <img src="https://img.shields.io/badge/Status-Prototype-orange?style=flat-square" />
 </p>
 
 </div>
 
 ---
 
-# 📖 Overview
+# Overview
 
-**Zenith-Indexer** is a hybrid indexing and retrieval engine designed for ultra-fast local knowledge processing.
+Zenith-Indexer is an experimental local knowledge retrieval system focused on combining:
 
-The project combines:
+- a Python prototype for rapid development and experimentation,
+- a future C++ core for performance-oriented indexing and processing.
 
-- ⚡ **Modern C++** for raw performance and memory-efficient indexing
-- 🧠 **Python AI tooling** for intelligent analysis and reporting
-- 📂 Local document processing
-- 🔍 Future-ready architecture for **LLM / RAG integration**
-- 🚀 Scalable design for GPU acceleration and graph-based retrieval
+The project currently provides a functional Python-based prototype used for document analysis and report generation.
 
-The philosophy behind the project is simple:
-
-> **"Make it work in Python. Make it fast in C++."**
+The long-term objective is to explore high-performance indexing, scalable document processing, and AI-assisted retrieval workflows.
 
 ---
 
-# 🏗 Architecture
+# Project Structure
 
 ```text
 zenith-indexer/
 │
-├── 🤖 ai-interface/
+├── ai-interface/
 │   ├── documents/
 │   ├── reports/
 │   └── main.py
 │
-├── ⚙️ core-engine/
-│   ├── include/
-│   ├── src/
-│   └── CMakeLists.txt
+├── core-engine/
 │
-├── 🧪 tests/
+├── tests/
 │
 ├── README.md
 └── LICENSE
@@ -63,55 +47,57 @@ zenith-indexer/
 
 ---
 
-# ⚙️ Tech Stack
+# Current Architecture
+
+The project currently follows a simple development approach:
+
+```text
+Prototype logic in Python
+→
+Optimize performance-critical components in C++
+```
+
+At the moment:
+
+- `ai-interface/` contains the working Python prototype,
+- `core-engine/` is reserved for the future C++ implementation.
+
+---
+
+# Technology Stack
 
 | Layer | Technology | Purpose |
 |---|---|---|
-| ⚙️ Core Engine | **C++17 / C++20** | High-speed indexing, optimized memory management |
-| 🐍 AI Interface | **Python 3.10+** | Logic orchestration, metrics, reporting |
-| 🧠 AI Integration | **OpenAI API** *(planned)* | Smart querying & semantic retrieval |
-| ⚡ Hardware Acceleration | **CUDA / GPU** *(planned)* | Parallel document processing |
-| 🧪 Testing | **PyTest / GoogleTest** *(planned)* | Reliability and regression testing |
+| Core Engine | C++17 / C++20 | Planned high-performance indexing engine |
+| AI Interface | Python 3.10+ | Current prototype and analysis workflow |
+| Testing | Python test suite | Reliability and validation |
 
 ---
 
-# 🚦 Current Status
+# Current Features
 
-| Module | Status |
-|---|---|
-| Python Prototype | ✅ Functional |
-| Local Document Analysis | ✅ Working |
-| Report Generation | ✅ Working |
-| C++ Core Engine | 🚧 In Development |
-| GPU Acceleration | 🧪 Planned |
-| Semantic Search / RAG | 🧠 Planned |
+- Local `.txt` document processing
+- Basic analysis pipeline
+- Metric and report generation
+- Modular project structure
 
 ---
 
-# 🔥 Features
+# Planned Features
 
-## ✅ Existing Features
+The following components are planned but not yet implemented:
 
-- Local `.txt` document ingestion
-- Automated metrics generation
-- File analysis pipeline
-- Modular architecture
-- AI-ready design
-
-## 🚀 Upcoming Features
-
-- Semantic vector search
-- GPU accelerated indexing
-- Graph-based knowledge traversal
-- Real-time indexing
-- Hybrid RAG pipeline
-- Distributed indexing nodes
+- C++ indexing engine
+- Semantic search
+- GPU acceleration
+- AI-assisted querying
+- Graph-based retrieval structures
 
 ---
 
-# 📦 Installation
+# Getting Started
 
-## 1️⃣ Clone the Repository
+## Clone the Repository
 
 ```bash
 git clone https://github.com/maxenceprohub/zenith-indexer.git
@@ -121,7 +107,7 @@ cd zenith-indexer
 
 ---
 
-# ▶️ Running the Python Prototype
+# Run the Python Prototype
 
 ```bash
 cd ai-interface
@@ -131,7 +117,7 @@ python main.py
 
 ---
 
-# 📂 Add Your Documents
+# Add Documents
 
 Place your `.txt` files inside:
 
@@ -139,104 +125,52 @@ Place your `.txt` files inside:
 ai-interface/documents/
 ```
 
-The engine will automatically:
-
-- Analyze files
-- Extract metrics
-- Generate reports
-- Prepare data for future AI indexing
+The prototype will process the files and generate analysis reports.
 
 ---
 
-# 🧠 Vision
+# Development Status
 
-Zenith-Indexer aims to become a **next-generation local knowledge engine**, combining:
-
-- ultra-fast indexing,
-- AI-assisted retrieval,
-- graph processing,
-- and scalable hardware acceleration.
-
-The long-term objective is to build a lightweight alternative to heavy enterprise search systems while remaining developer-friendly and fully local-first.
-
----
-
-# 🛠 Development Philosophy
-
-```cpp
-// Step 1
-Build fast in Python
-
-// Step 2
-Optimize critical paths in C++
-
-// Step 3
-Scale with GPU + AI
-```
+| Component | Status |
+|---|---|
+| Python Prototype | Functional |
+| Report Generation | Functional |
+| C++ Core Engine | In Development |
+| AI Integration | Planned |
+| GPU Support | Planned |
 
 ---
 
-# 📸 Future Roadmap
+# Contributing
 
-- [ ] Modern C++ indexing core
-- [ ] Parallel file scanning
-- [ ] Memory-mapped indexing
-- [ ] Semantic embeddings
-- [ ] Local vector database
-- [ ] RAG-compatible API
-- [ ] CUDA acceleration
-- [ ] Web dashboard
-- [ ] Multi-format document support
-- [ ] Distributed indexing
-
----
-
-# 🤝 Contributing
-
-Contributions, ideas, and performance optimizations are welcome.
+Contributions and feedback are welcome.
 
 ```bash
-# Fork the repository
-# Create your feature branch
-git checkout -b feature/amazing-feature
+git checkout -b feature/my-feature
 
-# Commit your changes
-git commit -m "Add amazing feature"
+git commit -m "Add my feature"
 
-# Push to GitHub
-git push origin feature/amazing-feature
+git push origin feature/my-feature
 ```
 
 ---
 
-# 📜 License
+# License
 
-This project is currently under development.
-
-A proper open-source license will be added soon.
+License information will be added later in the project lifecycle.
 
 ---
 
-# 👨‍💻 Author
+# Author
 
-### Maxence
+**Maxence**
 
-Aspiring Software Engineer passionate about:
+Software engineering student interested in:
 
-- Systems Engineering
-- High-Performance Computing
-- C++
-- Artificial Intelligence
-- Low-Level Optimization
+- systems programming,
+- C++,
+- performance optimization,
+- artificial intelligence,
+- low-level software architecture.
 
 ---
-
-<div align="center">
-
-## ⭐ Support the Project
-
-If you like the project, consider giving it a ⭐ on GitHub.
-
-**Zenith-Indexer — Fast. Modular. AI-Ready.**
-
-</div>
