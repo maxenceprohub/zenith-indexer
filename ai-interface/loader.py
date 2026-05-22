@@ -19,8 +19,15 @@ def lire_contenu_fichier(chemin_fichier):
     try:
         with open(chemin_fichier, 'r', encoding='utf-8') as f:
             return f.read()
+        
+    except UnicodeDecodeError:
+        return f"[ERREUR_FORMAT] Le fichier n'est pas un fichier texte UTF-8 valide."
+        
+    except PermissionError:
+        return f"[ERREUR_PERMISSION] : Accès refusé au fichier '{chemin_fichier}'"
+
     except Exception as e: 
-        return f"Erreur lors de la lecture du fichier : {e}"    
+        return f"[ERREUR_INCONNUE] : {e}"    
 
 def obtenir_frequence_mot_cle(contenu_texte, mot_cle):
     """Calcule le nombre d'occurrences d'un mot-clé dans le texte."""
@@ -80,11 +87,16 @@ if __name__ == "__main__":
                 fichier_selectionne = fichiers[selection]
                 contenu = lire_contenu_fichier(fichier_selectionne)
                 
-                requete_recherche = input(f"Entrez le mot-clé à chercher dans '{fichier_selectionne.name}' : ")
-                occurrences = obtenir_frequence_mot_cle(contenu, requete_recherche)
+                if contenu.startswith("[ERREUR"):
+                    print(f"\n{contenu}")
+                    print("Analyse annulé.")
+                else:
                 
-                # On calcule les métriques ici
-                total, pourcent = calculer_metriques(contenu, occurrences)
+                    requete_recherche = input(f"Entrez le mot-clé à chercher dans '{fichier_selectionne.name}' : ")
+                    occurrences = obtenir_frequence_mot_cle(contenu, requete_recherche)
+                
+                    # On calcule les métriques ici
+                    total, pourcent = calculer_metriques(contenu, occurrences)
 
                 if occurrences > 0:
                     print(f"\n--- RÉSULTATS DE L'ANALYSE ---")
@@ -95,7 +107,7 @@ if __name__ == "__main__":
                     print(f"\nAucune correspondance : Le mot '{requete_recherche}' n'a pas été trouvé.")
                     print(f"Note : Le document contient tout de même {total} mots.")
 
-                sauvegarder_rapport(fichier_selectionne.name, requete_recherche, total, occurrences, pourcent)
+                sauvegarder_rapport(fichier_selectionne.name, requete_recherche, occurrences, total, pourcent)
 
             else:
                 print("Erreur : Index invalide.")
