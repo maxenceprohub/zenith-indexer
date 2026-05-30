@@ -1,5 +1,38 @@
 import os
+from openai import OpenAI
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
+
+def interogger_ia_sur_document(contenu_texte, question):
+
+    if not os.getenv("OPENAI_API_KEY"):
+        return "[ERREUR] : Clé API OpenAI non trouvée. Veuillez définir OPENAI_API_KEY dans votre environnement (.env)."
+    
+    try:
+
+        client = OpenAI()
+
+        system_prompt = ("Tu es Zenith IA, l'assistant intelligent du Zenith Indexer.\n"
+            "Voici le contenu d'un document texte local. Réponds à la question de l'utilisateur "
+            "en te basant UNIQUEMENT sur ce texte. Si la réponse n'est pas dans le texte, dis-le poliment.\n\n"
+            f"--- DEBUT DU DOCUMENT ---\n{contenu_texte}\n--- FIN DU DOCUMENT ---")
+        
+        reponse = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": question}
+            ], 
+            temperature=0.3
+        )
+
+        return reponse.choices[0].message.content
+    
+    except Exception as e:
+        return f"[ERREUR IA] Impossible d'obtenir une réponse : {e}"
+
 
 def scanner_documents():
     """
@@ -109,6 +142,13 @@ if __name__ == "__main__":
 
                 sauvegarder_rapport(fichier_selectionne.name, requete_recherche, occurrences, total, pourcent)
 
+                mode_ia = input("\nVoulez-vous interroger l'IA sur ce document ? (o/n) : ")
+                if mode_ia.lower() == 'o':
+                    question_ia = input("Entrez votre questions pour l'IA :")
+                    print("Réfléxion En Cours...")
+
+                    reponse_ia = interogger_ia_sur_document(contenu, question_ia)
+                    print(f"\n--- RÉPONSE DE L'IA ---\n{reponse_ia}")
             else:
                 print("Erreur : Index invalide.")
 
