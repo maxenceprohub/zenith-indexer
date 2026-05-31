@@ -2,6 +2,17 @@ import os
 from openai import OpenAI
 from pathlib import Path
 from dotenv import load_dotenv
+import logging
+
+logging.basicConfig(
+    level=logging.INFO, # On enregistre tout ce qui est INFO, WARNING et ERROR
+    format="%(asctime)s - [%(levelname)s] - %(message)s", # Structure de la ligne : Heure - [Niveau] - Message
+    datefmt="%Y-%m-%d %H:%M:%S", # Format de l'heure : Année-Mois-Jour Heure:Minute:Seconde
+    handlers=[
+        logging.FileHandler("zenith.log", encoding="utf-8"), # Écrit automatiquement dans un fichier 'zenith.log'
+        logging.StreamHandler() # Continue d'afficher les messages dans ton terminal de commande
+    ]
+)
 
 load_dotenv()
 
@@ -69,8 +80,15 @@ def obtenir_frequence_mot_cle(contenu_texte, mot_cle):
     return contenu_normalise.count(mot_cle_normalise)
 
 def calculer_metriques(contenu_texte, nombre_occurences):
+    ponctuation = [",", ".", "!", "?", ";", ":", "(", ")", "[", "]", "\n", "\t"]
+
+    texte_nettoye = contenu_texte
+
+    for caractere in ponctuation:
+        texte_nettoye = texte_nettoye.replace(caractere, " ")
+
     """Calcule le total de mots et la densité."""
-    mots = contenu_texte.split()
+    mots = texte_nettoye.split()
     total_mots = len(mots)
     densite = (nombre_occurences / total_mots) * 100 if total_mots > 0 else 0
     return total_mots, round(densite, 2)
@@ -93,11 +111,11 @@ def sauvegarder_rapport(nom_fichier_analyse, mot_cle, occurences, total_mots, de
             f.write(f"Densite du mot-cle   : {densite}%\n\n")
             f.write("==================================================\n")
             f.write("Genere automatiquement par Zenith Indexer (Prototype Python)\n")
-        print(f"Rapport généré : '{nom_rapport}'")
-        print(f"\n[INFO] Rapport sauvegarde avec succes sous : {chemin_rapport.resolve()}")
+        logging.info(f"Rapport généré : '{nom_rapport}'")
+        logging.info(f"\n[INFO] Rapport sauvegarde avec succes sous : {chemin_rapport.resolve()}")
 
     except Exception as e:
-        print(f"\n[ERREUR] Impossible de sauvegarder le rapport : {e}")
+        logging.error(f"\n[ERREUR] Impossible de sauvegarder le rapport : {e}")
 if __name__ == "__main__":
     
     fichiers = scanner_documents()
@@ -106,12 +124,12 @@ if __name__ == "__main__":
 
     if not fichiers:
         chemin_attendu = Path(__file__).parent.parent / "documents"
-        print(f"Erreur : Aucun fichier trouvé dans 'documents'.")
-        print(f"dépose tes fichiers .txt directement dans : '{chemin_attendu}'")
+        logging.error(f"Erreur : Aucun fichier trouvé dans 'documents'.")
+        logging.info(f"dépose tes fichiers .txt directement dans : '{chemin_attendu}'")
     else:
-        print(f"\nTrouvé {len(fichiers)} fichier(s) :")
+        logging.info(f"\nTrouvé {len(fichiers)} fichier(s) :")
         for index, chemin in enumerate(fichiers):
-            print(f"[{index}] {chemin.name}")
+            logging.info(f"[{index}] {chemin.name}")
         
         try:
             selection = int(input("\nSélectionnez l'index d'un fichier à analyser : "))
@@ -121,8 +139,8 @@ if __name__ == "__main__":
                 contenu = lire_contenu_fichier(fichier_selectionne)
                 
                 if contenu.startswith("[ERREUR"):
-                    print(f"\n{contenu}")
-                    print("Analyse annulé.")
+                    logging.error(f"\n{contenu}")
+                    logging.info("Analyse annulé.")
                 else:
                 
                     requete_recherche = input(f"Entrez le mot-clé à chercher dans '{fichier_selectionne.name}' : ")
@@ -132,27 +150,34 @@ if __name__ == "__main__":
                     total, pourcent = calculer_metriques(contenu, occurrences)
 
                 if occurrences > 0:
-                    print(f"\n--- RÉSULTATS DE L'ANALYSE ---")
-                    print(f"Nombre total de mots dans le document : {total}")
-                    print(f"Le mot '{requete_recherche}' apparaît {occurrences} fois.")
-                    print(f"Densité du mot-clé : {pourcent}%")
+                    logging.info(f"\n--- RÉSULTATS DE L'ANALYSE ---")
+                    logging.info(f"Nombre total de mots dans le document : {total}")
+                    logging.info(f"Le mot '{requete_recherche}' apparaît {occurrences} fois.")
+                    logging.info(f"Densité du mot-clé : {pourcent}%")
                 else:
-                    print(f"\nAucune correspondance : Le mot '{requete_recherche}' n'a pas été trouvé.")
-                    print(f"Note : Le document contient tout de même {total} mots.")
+                    logging.info(f"\nAucune correspondance : Le mot '{requete_recherche}' n'a pas été trouvé.")
+                    logging.info(f"Note : Le document contient tout de même {total} mots.")
 
                 sauvegarder_rapport(fichier_selectionne.name, requete_recherche, occurrences, total, pourcent)
-
+                
                 mode_ia = input("\nVoulez-vous interroger l'IA sur ce document ? (o/n) : ")
                 if mode_ia.lower() == 'o':
-                    question_ia = input("Entrez votre questions pour l'IA :")
-                    print("Réfléxion En Cours...")
+                    logging.info("Mode Discussion Activé (tapez 'quitter' pour s'arrêter)")
 
-                    reponse_ia = interogger_ia_sur_document(contenu, question_ia)
-                    print(f"\n--- RÉPONSE DE L'IA ---\n{reponse_ia}")
+                    while True:
+
+                        question_ia = input("Entrez votre questions pour l'IA :")
+                        if question_ia.lower() == "quitter":
+                            logging.info("Fin de la session AI.")
+                            break
+
+                        logging.info("Réfléxion En Cours...")
+                        reponse_ia = interogger_ia_sur_document(contenu, question_ia)
+                        print(f"\n--- RÉPONSE DE L'IA ---\n{reponse_ia}")
             else:
-                print("Erreur : Index invalide.")
+                logging.error("Erreur : Index invalide.")
 
         except ValueError:
-            print("Erreur : Veuillez entrer un nombre valide.")
+            logging.error("Erreur : Veuillez entrer un nombre valide.")
 
-    print("\n--- SESSION TERMINÉE ---")
+    logging.info("\n--- SESSION TERMINÉE ---")
