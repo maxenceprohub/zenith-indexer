@@ -1,4 +1,6 @@
-import runpy
+# run.py
+import os
 from pathlib import Path
 
-runpy.run_path(str(Path(__file__).parent / "src" / "main.py"))
+# On teste avec python3 au lieu de python
+os.system(f"python3 {Path(__file__).parent / 'src' / 'main.py'}")

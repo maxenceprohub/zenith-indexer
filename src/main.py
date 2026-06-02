@@ -50,7 +50,7 @@ def scanner_documents():
     Localise tous les fichiers .txt dans le dossier spécifié.
     Calcule le chemin par rapport au dossier parent du script.
     """
-    chemin_base = Path(__file__).parent / "documents"
+    chemin_base = Path(__file__).parent.parent / "documents"
     
     if not chemin_base.exists():
         chemin_base.mkdir(parents=True, exist_ok=True)
@@ -116,6 +116,7 @@ def sauvegarder_rapport(nom_fichier_analyse, mot_cle, occurences, total_mots, de
 
     except Exception as e:
         logging.error(f"\n[ERREUR] Impossible de sauvegarder le rapport : {e}")
+
 if __name__ == "__main__":
     
     fichiers = scanner_documents()
