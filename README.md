@@ -216,8 +216,11 @@ Driven by a passion for creating highly optimized software, my technical focus c
 * **Systems Programming** & Low-Level Software Architecture Concepts.
 * **Data Pipelines Optimization** & Secure Local Knowledge Management.
 
+```
 _____ _                 _       __     __
  |_   _| |__   __ _ _ __ | | __   \ \   / /__  _   _
    | | | '_ \ / _` | '_ \| |/ /    \ \ / / _ \| | | |
    | | | | | | (_| | | | |   <      \ V / (_) | |_| |
    |_| |_| |_|\__,_|_| |_|_|\_\      |_| \___/ \__,_|
+
+```
