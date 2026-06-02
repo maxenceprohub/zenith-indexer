@@ -1,8 +1,10 @@
+
 import os
 from openai import OpenAI
 from pathlib import Path
 from dotenv import load_dotenv
 import logging
+import re
 
 logging.basicConfig(
     level=logging.INFO, # On enregistre tout ce qui est INFO, WARNING et ERROR
@@ -80,16 +82,20 @@ def obtenir_frequence_mot_cle(contenu_texte, mot_cle):
     return contenu_normalise.count(mot_cle_normalise)
 
 def calculer_metriques(contenu_texte, nombre_occurences):
-    ponctuation = [",", ".", "!", "?", ";", ":", "(", ")", "[", "]", "\n", "\t"]
 
-    texte_nettoye = contenu_texte
+    texte_nettoye = re.sub(r"[^\w\s]", " ", contenu_texte)
 
-    for caractere in ponctuation:
-        texte_nettoye = texte_nettoye.replace(caractere, " ")
+    mots_bruts = texte_nettoye.lower().split()
 
-    """Calcule le total de mots et la densité."""
-    mots = texte_nettoye.split()
-    total_mots = len(mots)
+    stopword = ["le", "la", "les", "de", "des", "un", "une", "et", "en", "que", "pour"]
+
+    mots_filtres =[]
+    for mot in mots_bruts:
+        if mot not in stopword:
+            mots_filtres.append(mot)
+
+    """Calcule le total de mots et la densité.""" 
+    total_mots = len(mots_filtres)
     densite = (nombre_occurences / total_mots) * 100 if total_mots > 0 else 0
     return total_mots, round(densite, 2)
 
