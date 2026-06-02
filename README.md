@@ -54,6 +54,7 @@ zenith-indexer/
 
 The project is engineered around a clean, decoupled, and unified Python architecture designed for stability and rapid scaling:
 
+```
 [ Central Launchpad (run.py) ]
 │
 ▼ ( Native System Execution )
@@ -63,7 +64,7 @@ The project is engineered around a clean, decoupled, and unified Python architec
 ▼               ▼
 [ Local Analytics ] [ Semantic LLM Orchestration ]
 ( Metrics & Reports )   ( Continuous AI Chat Loop )
-
+```
 At the moment:
 * **`run.py`** acts as the centralized micro-launcher at the root, securing a clean system-level execution context (`python3`).
 * **`src/`** encapsulates the entire core logic, isolating file scanning, advanced text normalization, density metrics, and the stateful conversational AI loop.
