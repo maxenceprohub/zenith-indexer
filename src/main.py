@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 import logging
 from pathlib import Path
+import time
 
 # On importe les 3 classes depuis notre fichier analyzer.py
 from analyzer import DocumentManager, TextAnalyzer, ZenithAI
@@ -71,6 +72,23 @@ if __name__ == "__main__":
                 if mode_ia.lower() == 'o':
                     logging.info("Mode Discussion Activé (tapez 'quitter' pour s'arrêter)")
 
+                    tous_les_chunks = analyseur.decouper_en_chuncks(taille_chunk=300, chevauchement=50)
+                    logging.info(f"[RAG] Document découpé en {len(tous_les_chunks)} chunks pour l'IA.")
+
+                    chunks_pertinents = []
+                    for c in tous_les_chunks:
+                        if requete_recherche.lower() in c.lower():
+                            chunks_pertinents.append(c)
+
+                    if not chunks_pertinents:
+                        logging.warning("Aucun Chunk Pertinent Trouvé : L'IA pourrait ne pas avoir assez de contexte pour répondre précisément.")
+                        contexte_ia = contenu
+                    else:
+                        logging.info(f" [RAG] {len(chunks_pertinents)} chunks pertinents trouvés. Fourniture de ce contexte à l'IA.")
+                        contexte_ia = "\n\n--- NOUVEAU MORCEAU ---\n\n".join(chunks_pertinents)
+
+                            
+
                     while True:
                         question_ia = input("Entrez votre questions pour l'IA : ")
                         if question_ia.lower() == "quitter":
@@ -78,7 +96,13 @@ if __name__ == "__main__":
                             break
 
                         logging.info("Réfléxion En Cours...")
-                        reponse_ia = zenith_ia.interogger_ia_sur_document(contenu, question_ia)
+
+                        debut_ia = time.time()
+
+                        reponse_ia = zenith_ia.interogger_ia_sur_document(contexte_ia, question_ia)
+                        fin_ia = time.time()
+                        temps_reponse = fin_ia - debut_ia
+                        logging.info(f"Réponse obtenue en {round(temps_reponse, 3)} secondes.")
                         print(f"\n--- RÉPONSE DE L'IA ---\n{reponse_ia}")
             else:
                 logging.error("Erreur : Index invalide.")

@@ -72,6 +72,20 @@ class TextAnalyzer:
         total_mots = len(mots_filtres)
         densite = (nombre_occurences / total_mots) * 100 if total_mots > 0 else 0
         return total_mots, round(densite, 2)
+    
+    def decouper_en_chuncks(self, taille_chunk=300, chevauchement=50):
+
+        mot = self.contenu.split()
+        chunks = []
+        
+        i = 0
+        while i < len(mot):
+
+            chunk = mot[i:i + taille_chunk]
+            chunks.append(" ".join(chunk))
+            i += taille_chunk - chevauchement
+
+        return chunks
 
 
 class ZenithAI:
