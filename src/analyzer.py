@@ -1,8 +1,8 @@
 import os
-from openai import OpenAI
 from pathlib import Path
 import logging
 import re
+import ollama
 
 class DocumentManager:
     """Gère la localisation, la lecture et la sauvegarde des rapports."""
@@ -91,25 +91,45 @@ class TextAnalyzer:
 class ZenithAI:
     """Gère la connexion et les requêtes avec l'API OpenAI."""
     def __init__(self):
-        self.client = OpenAI() if os.getenv("OPENAI_API_KEY") else None
+        self.modele = "llama3.2:1b"
+        self.historique_discussion = []
+        self.contexte_initialise = False
 
-    def interogger_ia_sur_document(self, contenu_texte, question):
-        if not self.client:
-            return "[ERREUR] : Clé API OpenAI non trouvée. Veuillez définir OPENAI_API_KEY dans votre environnement (.env)."
+    def interrogger_ia_sur_document(self, contexte, question):
         try:
-            system_prompt = ("Tu es Zenith IA, l'assistant intelligent du Zenith Indexer.\n"
-                "Voici le contenu d'un document texte local. Réponds à la question de l'utilisateur "
-                "en te basant UNIQUEMENT sur ce texte. Si la réponse n'est pas dans le texte, dis-le poliment.\n\n"
-                f"--- DEBUT DU DOCUMENT ---\n{contenu_texte}\n--- FIN DU DOCUMENT ---")
-            
-            reponse = self.client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": question}
-                ], 
-                temperature=0.3
+            if not self.contexte_initialise:
+                prompt_systeme = (
+                    "Tu es l'intelligence artificielle de Zenith Indexer.\n"
+                    "Réponds à la question de l'utilisateur en français en t'appuyant uniquement sur les morceaux de texte fournis.\n"
+                    "Si la réponse n'est pas dans le texte, dis poliment que tu ne sais pas.\n\n"
+                    f"--- MORCEAUX DE TEXTE FOURNIS ---\n{contexte}"
+                )
+
+                self.historique_discussion.append({
+                    "role": "system",
+                    "content": prompt_systeme
+                })
+
+                self.contexte_initialise = True
+
+            self.historique_discussion.append({
+                "role": "user",
+                "content": question
+            })
+
+            reponse = ollama.chat(
+                model=self.modele,
+                messages=self.historique_discussion
             )
-            return reponse.choices[0].message.content
+
+            reponse_texte = reponse['message']['content']
+
+            self.historique_discussion.append({
+                "role": "assistant",
+                "content": reponse_texte
+            })
+
+            return reponse_texte
+
         except Exception as e:
-            return f"[ERREUR IA] Impossible d'obtenir une réponse : {e}"
+            return f"[ERREUR IA LOCALE] Impossible de joindre le modèle : {e}"

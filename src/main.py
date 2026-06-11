@@ -99,7 +99,7 @@ if __name__ == "__main__":
 
                         debut_ia = time.time()
 
-                        reponse_ia = zenith_ia.interogger_ia_sur_document(contexte_ia, question_ia)
+                        reponse_ia = zenith_ia.interrogger_ia_sur_document(contexte_ia, question_ia)
                         fin_ia = time.time()
                         temps_reponse = fin_ia - debut_ia
                         logging.info(f"Réponse obtenue en {round(temps_reponse, 3)} secondes.")
