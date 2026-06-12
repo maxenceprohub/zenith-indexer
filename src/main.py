@@ -19,8 +19,30 @@ logging.basicConfig(
 
 load_dotenv()
 
+def afficher_interface():
+    os.system ('clear' if os.name == 'posix' else 'cls')
+
+    banniere = """
+====================================================================
+  ______ _____ _   _ _____ _______ _    _   _____ _____   _   _
+ |___  /|  ___| \ | |_   _|__   __| |  | | |_   _|  __ \ | \ | |
+    / / | |__ |  \| | | |    | |  | |__| |   | | | |  | ||  \| |    
+   / /  |  __|| . ` | | |    | |  |  __  |   | | | |  | || . ` | 
+  / /__| |____| |\  |_| |_   | |  | |  | |  _| |_| |__| || |\  | 
+ /_____|______|_| \_|_____|  |_|  |_|  |_| |_____|_____/ |_| \_|
+                                                                
+                     LOCAL ENTERPRISE RAG ENGINE
+====================================================================
+    """
+    print(banniere)
+
+    
+
 if __name__ == "__main__":
     
+
+    afficher_interface()
+
     # On instancie nos managers globaux au démarrage
     manager_doc = DocumentManager()
     zenith_ia = ZenithAI()
@@ -58,10 +80,14 @@ if __name__ == "__main__":
                     total, pourcent = analyseur.calculer_metriques(occurrences)
 
                 if occurrences > 0:
-                    logging.info(f"\n--- RÉSULTATS DE L'ANALYSE ---")
-                    logging.info(f"Nombre total de mots dans le document : {total}")
-                    logging.info(f"Le mot '{requete_recherche}' apparaît {occurrences} fois.")
-                    logging.info(f"Densité du mot-clé : {pourcent}%")
+                    print("\n" + "="*40)
+                    print("RÉSULTATS DE L'ANALYSE")
+                    print("="*40)
+                    print(f" - Volume total de mots : {total}")
+                    print(f" - Terme recherché     : '{requete_recherche}'")
+                    print(f" - Occurrences trouvées: {occurrences} fois")
+                    print(f" - Densité du mot-clé  : {pourcent}%")
+                    print("="*40 + "\n")
                 else:
                     logging.info(f"\nAucune correspondance : Le mot '{requete_recherche}' n'a pas été trouvé.")
                     logging.info(f"Note : Le document contient tout de même {total} mots.")
@@ -90,7 +116,10 @@ if __name__ == "__main__":
                             
 
                     while True:
-                        question_ia = input("Entrez votre questions pour l'IA : ")
+                        question_ia = input("\nUSER > ")
+                        if not question_ia.strip():
+                            continue
+
                         if question_ia.lower() == "quitter":
                             logging.info("Fin de la session AI.")
                             break
@@ -98,12 +127,13 @@ if __name__ == "__main__":
                         logging.info("Réfléxion En Cours...")
 
                         debut_ia = time.time()
-
                         reponse_ia = zenith_ia.interrogger_ia_sur_document(contexte_ia, question_ia)
                         fin_ia = time.time()
-                        temps_reponse = fin_ia - debut_ia
+
+                        temps_reponse = round(fin_ia - debut_ia, 3)
                         logging.info(f"Réponse obtenue en {round(temps_reponse, 3)} secondes.")
-                        print(f"\n--- RÉPONSE DE L'IA ---\n{reponse_ia}")
+                        print(f"\nAI > {reponse_ia}")
+                        print("-"*40)
             else:
                 logging.error("Erreur : Index invalide.")
 
